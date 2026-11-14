@@ -1,0 +1,24 @@
+.Aimg {
+    display: flex;
+    align-items: center;
+}
+
+.imgaccount {
+    width: clamp(50px, 8vw, 70px);
+    height: clamp(50px, 8vw, 70px);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.Nameaccount {
+    margin-left: clamp(8px, 1.5vw, 10px);
+}
+
+.outt {
+    margin-top: clamp(16px, 3.5vh, 27px);
+    margin-left: clamp(8px, 1.5vw, 10px);
+}
+
+.Hellow {
+    margin-top: clamp(50px, 12vh, 100px);
+}

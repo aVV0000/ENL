@@ -1,0 +1,43 @@
+.Add {
+    text-align: center;
+    margin-top: clamp(40px, 8vh, 80px);
+    padding: 0 4%;
+    box-sizing: border-box;
+}
+
+.add_text {
+    font-size: clamp(1.4rem, 4vw, 2.5rem);
+}
+
+.Pages_element {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(10px, 2vh, 16px);
+}
+
+.Pages_element select {
+    margin-top: clamp(12px, 2.5vh, 20px);
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    height: clamp(42px, 6.5vh, 50px);
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+}
+
+.input_save {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(10px, 2vh, 16px);
+    width: 100%;
+}
+
+.input_save input {
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    height: clamp(42px, 6.5vh, 50px);
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    box-sizing: border-box;
+}

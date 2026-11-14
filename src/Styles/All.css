@@ -1,0 +1,102 @@
+.All {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    color: aliceblue;
+}
+
+.All .all_top {
+    flex-shrink: 0;
+    padding: 7px 20px 0;
+    box-sizing: border-box;
+}
+
+.All .all_top h1 {
+    text-align: center;
+    margin: 0 0 15px;
+}
+
+.all_tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.all_tab {
+    height: 45px;
+    padding: 0 18px;
+    font-size: 16px;
+    background-color: rgb(56, 51, 51);
+    color: aliceblue;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.all_tab.active {
+    background-color: rgb(110, 98, 98);
+}
+
+.all_search {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    height: 45px;
+    font-size: 16px;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+.All .all_middle {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.All .all_bottom {
+    flex: 0 0 100px;
+    height: 100px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.All .all_bottom .Back {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    right: auto !important;
+    margin: 0 !important;
+}
+
+.all_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-auto-rows: max-content;
+    align-content: start;
+    gap: 10px 20px;
+    text-align: left;
+}
+
+.all_list li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px;
+    background-color: rgb(56, 51, 51);
+    border-radius: 8px;
+}

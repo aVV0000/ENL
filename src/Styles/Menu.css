@@ -1,0 +1,111 @@
+.Sing {
+    position: fixed;
+    top: clamp(6px, 1.5vh, 14px);
+    left: clamp(10px, 3vw, 24px);
+    margin: 0;
+    height: clamp(40px, 6vw, 56px);
+    padding: 0 clamp(14px, 3vw, 24px);
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    color: aliceblue;
+    background-color: rgb(56, 51, 51);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.main_menu {
+    min-height: 100dvh;
+    box-sizing: border-box;
+    padding: 90px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(30px, 6vw, 100px);
+}
+
+.achievements {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.achievements h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    color: #ffffff;
+}
+
+.line {
+    flex-shrink: 0;
+    width: 2px;
+    height: clamp(200px, 45vh, 380px);
+    background-color: white;
+}
+
+.achievements_text {
+    flex: 1;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    text-align: left;
+}
+
+.achievements_text p {
+    margin: 0;
+}
+
+.new_words_time {
+    color: rgb(51, 194, 38);
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    font-weight: bold;
+}
+
+.new_words_time_all {
+    color: rgb(43, 157, 165);
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    font-weight: bold;
+}
+
+.fire {
+    color: rgb(204, 137, 37);
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+.goal {
+    margin-top: clamp(30px, 6vh, 60px);
+}
+
+.day {
+    color: rgb(189, 147, 211);
+}
+
+.start_learning {
+    background-color: rgb(122, 90, 66);
+    color: aliceblue;
+    padding: 14px 60px;
+    margin-top: clamp(30px, 6vh, 60px);
+}
+
+@media (max-width: 800px) {
+    .main_menu {
+        flex-direction: column;
+        text-align: center;
+        padding: 90px 5% 120px;
+    }
+
+    .achievements {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .line {
+        width: 60%;
+        height: 2px;
+    }
+
+    .achievements_text {
+        text-align: center;
+    }
+}

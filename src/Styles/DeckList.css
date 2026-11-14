@@ -1,0 +1,103 @@
+.deck_page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.dl_top {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: clamp(6px, 1.5vh, 14px) 0;
+    padding-left: clamp(10px, 3vw, 24px);
+    padding-right: calc(clamp(10px, 3vw, 24px) + clamp(40px, 6vw, 56px) + 12px);
+    box-sizing: border-box;
+}
+
+.dl_top .deck_search {
+    flex: 1;
+    min-width: 0;
+    height: clamp(40px, 6vh, 48px);
+    padding: 0 clamp(12px, 2vw, 19px);
+    box-sizing: border-box;
+    border: none;
+    border-radius: 10px;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+}
+
+.dl_middle {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: clamp(12px, 3vw, 20px);
+    box-sizing: border-box;
+}
+
+.dl_bottom {
+    flex: 0 0 clamp(70px, 12vh, 100px);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 clamp(12px, 2.5vw, 24px);
+    box-sizing: border-box;
+}
+
+.dl_bottom .Back {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    right: auto !important;
+    margin: 0 !important;
+}
+
+.deck_list {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: clamp(14px, 3vw, 30px);
+}
+
+.deck {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: clamp(130px, 22vw, 200px);
+    aspect-ratio: 1;
+    padding: clamp(8px, 1.5vw, 15px);
+    box-sizing: border-box;
+    background-color: #60697033;
+    border: none;
+    border-radius: 10px;
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    cursor: pointer;
+    color: white;
+}
+
+.deck:hover {
+    background-color: #363c46;
+}
+
+.deck_count {
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .deck_list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 3vw;
+        justify-items: center;
+    }
+
+    .deck {
+        width: 85%;
+        min-width: 0;
+        font-size: clamp(0.95rem, 4vw, 1.2rem);
+        overflow-wrap: anywhere;
+    }
+}

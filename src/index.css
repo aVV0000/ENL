@@ -1,0 +1,35 @@
+body {
+    background-color: #000;
+    color: aliceblue;
+    position: relative;
+    isolation: isolate;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url("./assets/gory.jpg") center / cover no-repeat;
+    filter: blur(50px);
+    transform: scale(1.3);
+}
+
+@media (max-width: 400px) {
+  button,
+  input,
+  select {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+* {
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}

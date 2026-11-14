@@ -1,0 +1,16 @@
+.last_page,
+.Back {
+    position: fixed;
+    top: auto;
+    left: auto;
+    bottom: clamp(12px, 2.5vh, 24px);
+    right: clamp(12px, 2.5vw, 24px);
+    margin: 0;
+    width: clamp(90px, 12vw, 150px);
+    height: clamp(42px, 6vh, 62px);
+    background-color: rgb(41, 34, 34);
+    color: aliceblue;
+    border-radius: 8px;
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    z-index: 100;
+}

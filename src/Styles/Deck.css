@@ -1,0 +1,218 @@
+.Deck_page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow-y: auto;
+    padding-bottom: clamp(80px, 14vh, 110px);
+}
+
+.deck_top {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: clamp(6px, 1.5vh, 14px) clamp(10px, 3vw, 24px);
+    padding-right: calc(clamp(10px, 3vw, 24px) + clamp(40px, 6vw, 56px) + 12px);
+    box-sizing: border-box;
+}
+
+.deck_top .deck_search {
+    flex: 1;
+    min-width: 0;
+    height: clamp(40px, 6vh, 48px);
+    padding: 0 clamp(12px, 2vw, 19px);
+    box-sizing: border-box;
+    border: none;
+    border-radius: 10px;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+}
+
+.deck_title {
+    text-align: center;
+    width: 100%;
+    margin-top: clamp(30px, 8vh, 70px);
+}
+
+.deck_title_link {
+    background: none;
+    border: none;
+    padding: 0 5%;
+    box-sizing: border-box;
+    max-width: 100%;
+    color: aliceblue;
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    cursor: pointer;
+    overflow-wrap: anywhere;
+}
+
+.deck_title_link:hover {
+    color: #7fc8f8;
+}
+
+.study {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2vh, 15px);
+    margin-top: clamp(16px, 4vh, 40px);
+    padding: 0 5%;
+    box-sizing: border-box;
+    color: white;
+}
+
+.study_word {
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.study_input {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 15px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 10px;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+}
+
+.study_btn {
+    padding: clamp(8px, 1.5vh, 10px) clamp(16px, 3vw, 25px);
+    border: none;
+    border-radius: 10px;
+    background-color: #0c9bee33;
+    color: white;
+    font-size: clamp(0.9rem, 1.5vw, 1rem);
+    cursor: pointer;
+}
+
+.ok {
+    color: #4caf50;
+}
+
+.bad {
+    color: #e53935;
+}
+
+.del_btn {
+    margin-left: 0;
+    padding: 4px 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgb(20, 17, 17);
+    color: white;
+    cursor: pointer;
+}
+
+.modal_bg {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5%;
+    box-sizing: border-box;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 1.5vh, 12px);
+    width: 100%;
+    max-width: 320px;
+    padding: clamp(15px, 3vw, 25px);
+    box-sizing: border-box;
+    border-radius: 10px;
+    background: #1e2a38;
+    color: white;
+}
+
+.modal input {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: clamp(0.95rem, 1.5vw, 1rem);
+}
+
+.notwords {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    text-align: center;
+}
+
+.list_page {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    box-sizing: border-box;
+    padding: clamp(6px, 1.5vh, 14px) clamp(10px, 3vw, 20px) 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: rgb(41, 34, 34);
+    color: aliceblue;
+}
+
+.list_top {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: clamp(10px, 2vh, 15px);
+}
+
+.list_search {
+    flex-shrink: 0;
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    height: clamp(40px, 6vh, 45px);
+    margin: 0 auto clamp(16px, 3vh, 30px);
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+.list_page .word_list {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+    grid-auto-rows: max-content;
+    align-content: start;
+    gap: 10px 20px;
+}
+
+.list_page .word_list li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px;
+    background-color: rgb(56, 51, 51);
+    border-radius: 8px;
+}
+
+.swap_btn {
+    padding: 2px 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgb(56, 51, 51);
+    color: aliceblue;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    line-height: 1.4;
+    cursor: pointer;
+}
+
+.swap_btn:hover {
+    background-color: rgb(80, 72, 72);
+}
