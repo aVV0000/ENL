@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Back_button from '../elements_page/Back_button.jsx';
+import Back_button from '../Elements_page/Back_button.jsx';
 import NavigaTionButton from '../Elements_page/NavigaTionButton.jsx';
 import { loadData, saveData } from '../api';
 import '../Styles/Deck.css';

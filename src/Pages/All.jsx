@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../Styles/All.css';
-import Back_button from '../elements_page/Back_button.jsx';
+import Back_button from '../Elements_page/Back_button.jsx';
 import { loadData, saveData } from '../api';
 
 const TABS = [
