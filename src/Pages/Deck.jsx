@@ -7,8 +7,9 @@ import { loadData, saveData } from '../api';
 import '../Styles/Deck.css';
 import '../Styles/Plus.css';
 
+
 async function getTranslations(word) {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|ru`;
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ru&dt=t&dt=bd&q=${encodeURIComponent(word)}`;
 
     const response = await fetch(url);
 
@@ -18,21 +19,23 @@ async function getTranslations(word) {
 
     const data = await response.json();
 
-    const translations = [
-        data.responseData?.translatedText,
-        ...(data.matches || []).map((item) => item.translation),
-    ];
+    const translations = [];
+
+    // Основной перевод
+    (data[0] || []).forEach(item => {
+        if (item?.[0]) translations.push(item[0].trim());
+    });
+
+    // Дополнительные словарные варианты
+    (data[1] || []).forEach(entry => {
+        (entry?.[1] || []).forEach(item => {
+            if (item?.[0]) translations.push(item[0].trim());
+        });
+    });
 
     return [...new Set(
-        translations
-            .filter(Boolean)
-            .map((item) => item.trim())
-            .filter((item) =>
-                item &&
-                !item.includes('MYMEMORY WARNING') &&
-                item.toLowerCase() !== word.toLowerCase()
-            )
-    )];
+        translations.filter(Boolean)
+    )].slice(0, 10);
 }
 
 export default function Deck() {
