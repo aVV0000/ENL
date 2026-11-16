@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import Back_button from '../Elements_page/Back_button.jsx';
 import NavigaTionButton from '../Elements_page/NavigaTionButton.jsx';
@@ -7,7 +7,6 @@ import { loadData, saveData } from '../api';
 import '../Styles/Deck.css';
 import '../Styles/Plus.css';
 
-// Получение вариантов перевода через MyMemory API
 async function getTranslations(word) {
     const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|ru`;
 
@@ -28,7 +27,11 @@ async function getTranslations(word) {
         translations
             .filter(Boolean)
             .map((item) => item.trim())
-            .filter((item) => item && !item.includes('MYMEMORY WARNING'))
+            .filter((item) =>
+                item &&
+                !item.includes('MYMEMORY WARNING') &&
+                item.toLowerCase() !== word.toLowerCase()
+            )
     )];
 }
 
@@ -54,9 +57,46 @@ export default function Deck() {
     const [comment, setComment] = useState('');
     const [message, setMessage] = useState('');
 
-    // Состояния поиска перевода
+    // Подсказки перевода
     const [translations, setTranslations] = useState([]);
     const [loadingTranslation, setLoadingTranslation] = useState(false);
+
+    const requestNumber = useRef(0);
+
+    // Автоматический поиск перевода при вводе слова
+    useEffect(() => {
+        const englishWord = word.trim();
+        const currentRequest = ++requestNumber.current;
+
+        setTranslations([]);
+        setLoadingTranslation(false);
+
+        if (!englishWord || !/^[a-zA-Z\s'-]+$/.test(englishWord)) {
+            return;
+        }
+
+        const timer = setTimeout(async () => {
+            setLoadingTranslation(true);
+
+            try {
+                const results = await getTranslations(englishWord);
+
+                if (currentRequest === requestNumber.current) {
+                    setTranslations(results);
+                }
+            } catch {
+                if (currentRequest === requestNumber.current) {
+                    setTranslations([]);
+                }
+            } finally {
+                if (currentRequest === requestNumber.current) {
+                    setLoadingTranslation(false);
+                }
+            }
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [word]);
 
     useEffect(() => {
         loadData().then(setData).catch(() => {});
@@ -132,35 +172,6 @@ export default function Deck() {
             setAnswer('');
             setResult(null);
         }, 1200);
-    }
-
-    // Поиск вариантов перевода
-    async function findTranslations() {
-        const englishWord = word.trim();
-
-        if (!englishWord) {
-            setMessage('Сначала введите английское слово');
-            return;
-        }
-
-        setLoadingTranslation(true);
-        setMessage('');
-        setTranslations([]);
-        setTranslation('');
-
-        try {
-            const results = await getTranslations(englishWord);
-
-            setTranslations(results);
-
-            if (results.length === 0) {
-                setMessage('Перевод не найден. Попробуйте вручную.');
-            }
-        } catch {
-            setMessage('Не удалось получить перевод. Проверьте интернет.');
-        } finally {
-            setLoadingTranslation(false);
-        }
     }
 
     async function handleAddWord() {
@@ -315,44 +326,44 @@ export default function Deck() {
                             value={word}
                             onChange={(e) => {
                                 setWord(e.target.value);
-                                setTranslations([]);
-                                setTranslation('');
                                 setMessage('');
                             }}
                             placeholder="английское слово"
                         />
 
-                        <button
-                            className="study_btn"
-                            onClick={findTranslations}
-                            disabled={loadingTranslation}
-                        >
-                            {loadingTranslation
-                                ? 'Ищу перевод...'
-                                : 'Найти перевод'}
-                        </button>
+                        <div className="translation_options">
+                            {loadingTranslation && (
+                                <p>Ищу варианты перевода...</p>
+                            )}
 
-                        {translations.length > 0 && (
-                            <div className="translation_options">
-                                <p>Выберите подходящий перевод:</p>
+                            {!loadingTranslation && translations.length > 0 && (
+                                <>
+                                    <p>Возможные значения:</p>
 
-                                {translations.map((item, index) => (
-                                    <button
-                                        key={index}
-                                        type="button"
-                                        className="study_btn"
-                                        onClick={() => setTranslation(item)}
-                                    >
-                                        {item}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
+                                    {translations.map((item, index) => (
+                                        <button
+                                            key={index}
+                                            type="button"
+                                            className="study_btn"
+                                            onClick={() => setTranslation(item)}
+                                        >
+                                            {item}
+                                        </button>
+                                    ))}
+                                </>
+                            )}
+
+                            {!loadingTranslation &&
+                                word.trim().length > 0 &&
+                                translations.length === 0 && (
+                                    <p>Подсказки пока не найдены</p>
+                                )}
+                        </div>
 
                         <input
                             value={translation}
                             onChange={(e) => setTranslation(e.target.value)}
-                            placeholder="выбранный перевод"
+                            placeholder="перевод"
                         />
 
                         <input
