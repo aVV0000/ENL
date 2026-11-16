@@ -1,62 +1,98 @@
 import express from 'express';
 import cors from 'cors';
-import fs from 'fs';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import path from 'path';
 import { fileURLToPath } from 'url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
+import { MongoClient } from 'mongodb';
 
 const jwt = jsonwebtoken;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SECRET = process.env.SECRET || 'смените-на-длинную-случайную-строку';
-const DIR = process.env.DATA_DIR || './server/data/users';
-fs.mkdirSync(DIR, { recursive: true });
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('Не задана переменная MONGODB_URI');
+  process.exit(1);
+}
+
+const client = new MongoClient(MONGODB_URI);
+await client.connect();
+const users = client.db('enl').collection('users');
+await users.createIndex({ username: 1 }, { unique: true });
+console.log('База подключена');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
 
-const file = (u) => `${DIR}/${u.replace(/[^a-zA-Z0-9_-]/g, '')}.json`;
+const NAME_RE = /^[a-zA-Z0-9_-]+$/;
+const norm = (u) => String(u || '').trim().toLowerCase();
 
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) return res.status(400).json({ error: 'Заполните поля' });
-  if (fs.existsSync(file(username))) return res.status(409).json({ error: 'Имя занято' });
-  const passwordHash = await bcrypt.hash(password, 10);
-  fs.writeFileSync(file(username), JSON.stringify({ passwordHash, items: [], decks: [] }, null, 2));
-  res.json({ token: jwt.sign({ username }, SECRET) });
+  try {
+    const username = norm(req.body.username);
+    const password = String(req.body.password || '');
+    if (!username || !password) return res.status(400).json({ error: 'Заполните поля' });
+    if (!NAME_RE.test(username)) return res.status(400).json({ error: 'Ник: латиница, цифры, _ и -' });
+    if (await users.findOne({ username })) return res.status(409).json({ error: 'Имя занято' });
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    await users.insertOne({ username, passwordHash, items: [], decks: [] });
+    res.json({ token: jwt.sign({ username }, SECRET, { expiresIn: '365d' }) });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
 });
 
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  if (!fs.existsSync(file(username))) return res.status(401).json({ error: 'Неверные данные' });
-  const data = JSON.parse(fs.readFileSync(file(username), 'utf8'));
-  if (!(await bcrypt.compare(password, data.passwordHash)))
-    return res.status(401).json({ error: 'Неверные данные' });
-  res.json({ token: jwt.sign({ username }, SECRET) });
+  try {
+    const username = norm(req.body.username);
+    const password = String(req.body.password || '');
+    const user = await users.findOne({ username });
+    if (!user || !(await bcrypt.compare(password, user.passwordHash)))
+      return res.status(401).json({ error: 'Неверные данные' });
+    res.json({ token: jwt.sign({ username }, SECRET, { expiresIn: '365d' }) });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
 });
 
 const auth = (req, res, next) => {
   try {
-    req.user = jwt.verify((req.headers.authorization || '').replace('Bearer ', ''), SECRET).username;
+    const token = (req.headers.authorization || '').replace('Bearer ', '');
+    req.user = jwt.verify(token, SECRET).username;
     next();
   } catch {
     res.status(401).json({ error: 'Нужен вход' });
   }
 };
 
-app.get('/data', auth, (req, res) => {
-  const { items, decks } = JSON.parse(fs.readFileSync(file(req.user), 'utf8'));
-  res.json({ items, decks });
+app.get('/data', auth, async (req, res) => {
+  try {
+    const user = await users.findOne({ username: req.user });
+    if (!user) return res.status(401).json({ error: 'Нужен вход' });
+    res.json({ items: user.items || [], decks: user.decks || [] });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
 });
 
-app.put('/data', auth, (req, res) => {
-  const data = JSON.parse(fs.readFileSync(file(req.user), 'utf8'));
-  data.items = req.body.items;
-  data.decks = req.body.decks;
-  fs.writeFileSync(file(req.user), JSON.stringify(data, null, 2));
-  res.json({ ok: true });
+app.put('/data', auth, async (req, res) => {
+  try {
+    const { items, decks } = req.body;
+    if (!Array.isArray(items) || !Array.isArray(decks))
+      return res.status(400).json({ error: 'Неверные данные' });
+    const r = await users.updateOne({ username: req.user }, { $set: { items, decks } });
+    if (!r.matchedCount) return res.status(401).json({ error: 'Нужен вход' });
+    res.json({ ok: true });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
 });
 
 app.use(express.static(path.join(__dirname, '../dist')));
